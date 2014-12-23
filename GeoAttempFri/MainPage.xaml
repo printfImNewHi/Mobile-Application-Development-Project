@@ -27,7 +27,7 @@
             <TextBlock  Text="Accuracy" Name="textAccuracy" />
             
             <Slider x:Name="mySlider" Grid.Row="3" Maximum="20" Minimum="10" ValueChanged="Slider_ValueChanged" />
-            <TextBlock  Text="Slide to set Zoom "/>
+            <TextBlock  Text="Slide to set Zoom"/>
         </StackPanel>
         <Canvas>
             <ProgressBar x:Name="myProgressBar" Grid.Row="0"  

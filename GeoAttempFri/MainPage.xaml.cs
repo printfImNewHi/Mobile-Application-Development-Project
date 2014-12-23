@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Controls.Maps;
@@ -17,7 +18,8 @@ using Windows.Devices.Geolocation;
 using Windows.Services.Maps;
 using Windows.Devices.Geolocation.Geofencing;
 using Windows.UI.Popups;
-using Windows.Storage.Streams;  
+using Windows.Storage.Streams;
+using System.Threading.Tasks;  
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -34,6 +36,7 @@ namespace GeoAttempFri
         public MainPage()
         {
             this.InitializeComponent();
+            this.InitialiseGeoFence();
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
@@ -68,28 +71,15 @@ namespace GeoAttempFri
             }
            
         }
-
-        // Slider Control  
+        // Slider control to set zoom
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             if (MyMap != null)
                 MyMap.ZoomLevel = e.NewValue;
         }  
 
-       private void addFence(string uniqueId, Geocircle geoCircle)
-       {
-           string geofenceId = uniqueId;
-           geofenceId = uniqueId + "WithDefalts";
-           Geofence geofenceBasic = new Geofence(geofenceId, geoCircle);
-
-           geofenceId = uniqueId + "WithSingleUse";
-           Boolean useOnce = true;
-           Geofence geofenceSingleUse = new Geofence(geofenceId,geoCircle, MonitoredGeofenceStates.Entered | MonitoredGeofenceStates.Removed, useOnce);
-   
-       }
-
        private async void btnGetLocation(object sender, RoutedEventArgs e)
-        {
+       {
             if (geo == null)
             {
                 geo = new Geolocator();
@@ -99,11 +89,52 @@ namespace GeoAttempFri
             textLatitude.Text = "Latitude: " + pos.Coordinate.Point.Position.Latitude.ToString();
             textLongitude.Text = "Longitude: " + pos.Coordinate.Point.Position.Longitude.ToString();
             textAccuracy.Text = "Accuracy: " + pos.Coordinate.Accuracy.ToString();
-        }
+       }
+        
+       private async Task InitialiseGeoFence()
+       {
+           var geoMon = GeofenceMonitor.Current;
+           var GeoId1 = "Test1";
+           var GeoId2 = "Test2";
+           var location = await new Geolocator().GetGeopositionAsync(TimeSpan.FromMinutes(5),TimeSpan.FromSeconds(3));
 
+           geoMon.GeofenceStateChanged += (sender, args) =>
+               {
+                   var geoReport = geoMon.ReadReports();
+                   foreach(var geofenceStateChangeReport in geoReport)
+                   {
+                       var id = geofenceStateChangeReport.Geofence.Id;
+                       var newState = geofenceStateChangeReport.NewState;
 
+                       if(id==GeoId1 && newState==GeofenceState.Entered)
+                       {
+                            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>new MessageDialog("Test 1 Geofence enabled").ShowAsync());
+                       }
+                       else if (id == GeoId2 && newState == GeofenceState.Entered)
+                       {
+                           Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => new MessageDialog("Test 2 Geofence enabled").ShowAsync());
+                       }
+                   }
+               };
 
+           var test1 = new BasicGeoposition()
+           {
+               Latitude = 53.860284,
+               Longitude = -9.316087
+           };
 
+           var test2 = new BasicGeoposition()
+           {
+               Latitude = 53.858468,
+               Longitude = -9.309102
+           };
+
+           var geo1 = new Geofence(GeoId1, new Geocircle(test1, 200), MonitoredGeofenceStates.Entered , false, TimeSpan.FromSeconds(10));
+           var geo2 = new Geofence(GeoId1, new Geocircle(test2, 200), MonitoredGeofenceStates.Entered , false, TimeSpan.FromSeconds(10));
+           geoMon.Geofences.Add(geo1);
+           geoMon.Geofences.Add(geo2);
+           
+       }
 
        private async void LocateMe_Click(object sender, RoutedEventArgs e)
        {
@@ -113,9 +144,7 @@ namespace GeoAttempFri
 
            try
            {
-               Geoposition geoposition = await geo.GetGeopositionAsync(
-                   maximumAge: TimeSpan.FromMinutes(5),
-                   timeout: TimeSpan.FromSeconds(10));
+               Geoposition geoposition = await geo.GetGeopositionAsync( maximumAge: TimeSpan.FromMinutes(5),timeout: TimeSpan.FromSeconds(10));
                await MyMap.TrySetViewAsync(geoposition.Coordinate.Point, 18D);
                mySlider.Value = MyMap.ZoomLevel;
                myProgressBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
