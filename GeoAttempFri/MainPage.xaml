@@ -17,15 +17,11 @@
                    FontSize="36" Margin="8,0,0,16"/>
             <Maps:MapControl
             x:Name="MyMap"
-    
             Height="295"
             Margin="0,0,0.167,0" />
-            <Button Content="Show Position" Click="btnGetLocation" 
-            HorizontalAlignment="Left" Margin="1,19,0,0" Name="button1" VerticalAlignment="Top" />
             <TextBlock  Visibility="Visible" Text="Latitude" Name="textLatitude" />
             <TextBlock  Text="Longitude" Name="textLongitude" />
             <TextBlock  Text="Accuracy" Name="textAccuracy" />
-            
             <Slider x:Name="mySlider" Grid.Row="3" Maximum="20" Minimum="10" ValueChanged="Slider_ValueChanged" />
             <TextBlock  Text="Slide to set Zoom"/>
         </StackPanel>
@@ -36,13 +32,12 @@
                  Height="10"  
                  Width="400"/>
         </Canvas>
-        
-        
-
     </Grid>
     <Page.BottomAppBar>
         <CommandBar ClosedDisplayMode="Compact" Opacity="0.9">
             <AppBarButton Label="Find Me" Icon="Find" Click="LocateMe_Click" />
+            <AppBarButton Label="Track Me" Icon="Target" Click="Track_Click" />
+            <AppBarButton Label="Shoe GPS" Icon="Globe" Click="DisplayGPS_Click" />
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

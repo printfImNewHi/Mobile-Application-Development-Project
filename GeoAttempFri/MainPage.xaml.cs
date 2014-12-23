@@ -19,7 +19,8 @@ using Windows.Services.Maps;
 using Windows.Devices.Geolocation.Geofencing;
 using Windows.UI.Popups;
 using Windows.Storage.Streams;
-using System.Threading.Tasks;  
+using System.Threading.Tasks;
+using System.Diagnostics;  
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -76,20 +77,27 @@ namespace GeoAttempFri
         {
             if (MyMap != null)
                 MyMap.ZoomLevel = e.NewValue;
-        }  
+        }
 
-       private async void btnGetLocation(object sender, RoutedEventArgs e)
+       private async void DisplayGPS_Click(object sender, RoutedEventArgs e)
        {
             if (geo == null)
             {
                 geo = new Geolocator();
             }
-
             Geoposition pos = await geo.GetGeopositionAsync();
             textLatitude.Text = "Latitude: " + pos.Coordinate.Point.Position.Latitude.ToString();
             textLongitude.Text = "Longitude: " + pos.Coordinate.Point.Position.Longitude.ToString();
             textAccuracy.Text = "Accuracy: " + pos.Coordinate.Accuracy.ToString();
        }
+
+       private void Track_Click(object sender, RoutedEventArgs e)
+       {
+          
+          
+       }
+
+       
         
        private async Task InitialiseGeoFence()
        {
@@ -97,7 +105,7 @@ namespace GeoAttempFri
            var GeoId1 = "Test1";
            var GeoId2 = "Test2";
            var location = await new Geolocator().GetGeopositionAsync(TimeSpan.FromMinutes(5),TimeSpan.FromSeconds(3));
-
+           try{
            geoMon.GeofenceStateChanged += (sender, args) =>
                {
                    var geoReport = geoMon.ReadReports();
@@ -133,7 +141,12 @@ namespace GeoAttempFri
            var geo2 = new Geofence(GeoId1, new Geocircle(test2, 200), MonitoredGeofenceStates.Entered , false, TimeSpan.FromSeconds(10));
            geoMon.Geofences.Add(geo1);
            geoMon.Geofences.Add(geo2);
-           
+           }
+           catch (Exception e)
+           {
+            Debug.WriteLine(e);
+            // geofence already added to system
+            }
        }
 
        private async void LocateMe_Click(object sender, RoutedEventArgs e)
