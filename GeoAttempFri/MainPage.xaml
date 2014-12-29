@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    
+
     <Grid>
         <StackPanel HorizontalAlignment="Stretch"
                 Margin="8,8,8,8" VerticalAlignment="Stretch" >
@@ -17,27 +17,28 @@
                    FontSize="36" Margin="8,0,0,16"/>
             <Maps:MapControl
             x:Name="MyMap"
-            Height="295"
+            Height="381"
             Margin="0,0,0.167,0" />
             <TextBlock  Visibility="Visible" Text="Latitude" Name="textLatitude" />
-            <TextBlock  Text="Longitude" Name="textLongitude" />
+            <TextBlock  Text="Longitude" Name="textLongitude" HorizontalAlignment="Left" Width="384" />
             <TextBlock  Text="Accuracy" Name="textAccuracy" />
             <Slider x:Name="mySlider" Grid.Row="3" Maximum="20" Minimum="10" ValueChanged="Slider_ValueChanged" />
-            <TextBlock  Text="Slide to set Zoom"/>
+            <TextBlock  Text="Slide to set Zoom" Height="16" Margin="0,0,0.167,0" HorizontalAlignment="Right" Width="384"/>
         </StackPanel>
-        <Canvas>
+        <Canvas Margin="0,0,0,10">
             <ProgressBar x:Name="myProgressBar" Grid.Row="0"  
                  IsIndeterminate="True"  
                  Maximum="100" Value="30"  
                  Height="10"  
                  Width="400"/>
         </Canvas>
+        <TextBlock Margin="150" x:Name="txtTestGeo"/>
     </Grid>
     <Page.BottomAppBar>
-        <CommandBar ClosedDisplayMode="Compact" Opacity="0.9">
+        <CommandBar ClosedDisplayMode="Compact" Opacity="0.9" Height="98">
             <AppBarButton Label="Find Me" Icon="Find" Click="LocateMe_Click" />
-            <AppBarButton Label="Track Me" Icon="Target" Click="Track_Click" />
-            <AppBarButton Label="Shoe GPS" Icon="Globe" Click="DisplayGPS_Click" />
+            <AppBarButton Label="Show GPS" Icon="Globe" Click="DisplayGPS_Click" />
+            <AppBarButton Label="Geofence" Icon="Directions" Click="ShowGeofence_Click" />
         </CommandBar>
     </Page.BottomAppBar>
 </Page>
