@@ -13,8 +13,8 @@
     <Grid>
         <StackPanel HorizontalAlignment="Stretch"
                 Margin="8,8,8,8" VerticalAlignment="Stretch" >
-            <TextBlock TextWrapping="NoWrap" Text="My Map Application"
-                   FontSize="36" Margin="8,0,0,16"/>
+            <TextBlock TextWrapping="NoWrap" Text="Geofenceing @ GMIT"
+                   FontSize="36" Margin="8,0,0,16" FontFamily="Motorwerk" IsColorFontEnabled="True"/>
             <Maps:MapControl
             x:Name="MyMap"
             Height="381"
@@ -36,9 +36,11 @@
     </Grid>
     <Page.BottomAppBar>
         <CommandBar ClosedDisplayMode="Compact" Opacity="0.9" Height="98">
+            <AppBarButton Label="Geofence" Icon="Globe" Click="ShowGeofence_Click" />
             <AppBarButton Label="Find Me" Icon="Find" Click="LocateMe_Click" />
-            <AppBarButton Label="Show GPS" Icon="Globe" Click="DisplayGPS_Click" />
-            <AppBarButton Label="Geofence" Icon="Directions" Click="ShowGeofence_Click" />
+            <AppBarButton Label="Show GPS" Icon="Directions" Click="DisplayGPS_Click" />
+            <AppBarButton Label="Back" Icon="Back" Click="BackToGMIT_Click" />
         </CommandBar>
     </Page.BottomAppBar>
+    
 </Page>

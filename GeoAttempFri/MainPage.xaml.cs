@@ -36,7 +36,6 @@ namespace GeoAttempFri
     {
         GeofenceMonitor _monitor = GeofenceMonitor.Current;
         Geolocator geo = null;
-        private Uri imgSource = new Uri("ms-appx:///Images/GMITMap.jpg");
         public MainPage()
         {
            this.InitializeComponent();
@@ -45,7 +44,7 @@ namespace GeoAttempFri
            _monitor.GeofenceStateChanged += MonitorOnGeofenceStateChanged;
 
            BasicGeoposition pos = new BasicGeoposition { Latitude = 53.860221, Longitude = -9.316038 };
-           BasicGeoposition pos1 = new BasicGeoposition { Latitude = 53.861204, Longitude = -9.312986 };
+           BasicGeoposition sportHall = new BasicGeoposition { Latitude = 53.278044, Longitude = -9.012473 };
            BasicGeoposition gmitLibrary = new BasicGeoposition { Latitude = 53.277628, Longitude = -9.009860 };
            BasicGeoposition scienceDepartment = new BasicGeoposition { Latitude = 53.278763, Longitude = -9.010220 };
            BasicGeoposition tourismAndArts = new BasicGeoposition { Latitude = 53.278519, Longitude = -9.010423 };
@@ -55,8 +54,8 @@ namespace GeoAttempFri
            BasicGeoposition receptionEntrance = new BasicGeoposition { Latitude = 53.279177, Longitude = -9.009941 };
 
            Geofence fence = new Geofence("Home but i wonder can i write a good long winded string", new Geocircle(pos, 50));
-           Geofence fence1 = new Geofence("Home50", new Geocircle(pos1, 50));
-           Geofence GmitLibrary = new Geofence("Your near the Library", new Geocircle(gmitLibrary, 18));
+           Geofence SportHall = new Geofence("Your near the GMIT Sports Hall", new Geocircle(sportHall, 50));
+           Geofence GmitLibrary = new Geofence("Your near the Library", new Geocircle(gmitLibrary, 30));
            Geofence ScienceDepartment = new Geofence("Your in Block B, near the Science Department", new Geocircle(scienceDepartment, 18));
            Geofence ArtsAndTourismDepartment = new Geofence("Your in Block C, near the Arts And Tourism Department", new Geocircle(tourismAndArts, 18));
            Geofence Engineering = new Geofence("Your in Block D, near the Engineering Department", new Geocircle(engineering, 18));
@@ -67,7 +66,7 @@ namespace GeoAttempFri
            try
            {
                _monitor.Geofences.Add(fence);
-               _monitor.Geofences.Add(fence1);
+               _monitor.Geofences.Add(SportHall);
                _monitor.Geofences.Add(GmitLibrary);
                _monitor.Geofences.Add(ScienceDepartment);
                _monitor.Geofences.Add(ArtsAndTourismDepartment);
@@ -211,6 +210,34 @@ namespace GeoAttempFri
                MyMap.MapElements.Add(shape);
            }
        }
+
+       private async void BackToGMIT_Click(object sender, RoutedEventArgs e)
+       {
+           MyMap.MapServiceToken = "asdfds-asdsadsafsfdsas";
+           geo = new Geolocator();
+           geo.DesiredAccuracyInMeters = 20;
+
+           try
+           {
+               Geoposition geoposition = await geo.GetGeopositionAsync(maximumAge: TimeSpan.FromMinutes(20), timeout: TimeSpan.FromSeconds(20));
+               MapIcon icon = new MapIcon();
+               icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Images/GMITMap1.jpg"));
+               icon.ZIndex = 1;
+               icon.Location = new Geopoint(new BasicGeoposition() { Latitude = 53.278481, Longitude = -9.010477 });
+               icon.NormalizedAnchorPoint = new Point(0.5, 0.5);
+               MyMap.MapElements.Add(icon);
+               await MyMap.TrySetViewAsync(icon.Location, 18D, 0, 0, MapAnimationKind.Bow);
+               myProgressBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+               mySlider.Value = MyMap.ZoomLevel;
+               MyMap.ZoomLevel = 17;
+           }
+           catch (UnauthorizedAccessException)
+           {
+               new MessageDialog("Cant get your location, check if location is enabled");
+           }
+           
+       }
+        
     }
 }
 
