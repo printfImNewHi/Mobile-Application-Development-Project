@@ -21,7 +21,8 @@ using Windows.UI.Popups;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using Windows.UI;  
+using Windows.UI;
+using MappingUtilities.Geofencing; 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -45,14 +46,35 @@ namespace GeoAttempFri
 
            BasicGeoposition pos = new BasicGeoposition { Latitude = 53.860221, Longitude = -9.316038 };
            BasicGeoposition pos1 = new BasicGeoposition { Latitude = 53.861204, Longitude = -9.312986 };
+           BasicGeoposition gmitLibrary = new BasicGeoposition { Latitude = 53.277628, Longitude = -9.009860 };
+           BasicGeoposition scienceDepartment = new BasicGeoposition { Latitude = 53.278763, Longitude = -9.010220 };
+           BasicGeoposition tourismAndArts = new BasicGeoposition { Latitude = 53.278519, Longitude = -9.010423 };
+           BasicGeoposition engineering = new BasicGeoposition { Latitude = 53.278256, Longitude = -9.010466 };
+           BasicGeoposition businessAndHum = new BasicGeoposition { Latitude = 53.279174, Longitude = -9.010466 };
+           BasicGeoposition frontFootEntrance = new BasicGeoposition { Latitude = 53.277499,  Longitude = -9.010820 };
+           BasicGeoposition receptionEntrance = new BasicGeoposition { Latitude = 53.279177, Longitude = -9.009941 };
 
-
-           Geofence fence = new Geofence("Home", new Geocircle(pos, 50));
+           Geofence fence = new Geofence("Home but i wonder can i write a good long winded string", new Geocircle(pos, 50));
            Geofence fence1 = new Geofence("Home50", new Geocircle(pos1, 50));
+           Geofence GmitLibrary = new Geofence("Your near the Library", new Geocircle(gmitLibrary, 18));
+           Geofence ScienceDepartment = new Geofence("Your in Block B, near the Science Department", new Geocircle(scienceDepartment, 18));
+           Geofence ArtsAndTourismDepartment = new Geofence("Your in Block C, near the Arts And Tourism Department", new Geocircle(tourismAndArts, 18));
+           Geofence Engineering = new Geofence("Your in Block D, near the Engineering Department", new Geocircle(engineering, 18));
+           Geofence BusinessAndHum = new Geofence("Your in Block A, near the Business and Humanities", new Geocircle(businessAndHum , 18));
+           Geofence FrontFootEntrance = new Geofence("Your near the front entrance walkway, near busy", new Geocircle(frontFootEntrance, 18));
+           Geofence ReceptionEntrance = new Geofence("Your near the entrance near the Reception", new Geocircle(receptionEntrance, 18));
 
            try
            {
                _monitor.Geofences.Add(fence);
+               _monitor.Geofences.Add(fence1);
+               _monitor.Geofences.Add(GmitLibrary);
+               _monitor.Geofences.Add(ScienceDepartment);
+               _monitor.Geofences.Add(ArtsAndTourismDepartment);
+               _monitor.Geofences.Add(Engineering);
+               _monitor.Geofences.Add(FrontFootEntrance);
+               _monitor.Geofences.Add(BusinessAndHum);
+               _monitor.Geofences.Add(ReceptionEntrance);
            }
            catch (Exception)
            {
@@ -75,14 +97,15 @@ namespace GeoAttempFri
             {
                 Geoposition geoposition = await geo.GetGeopositionAsync(maximumAge: TimeSpan.FromMinutes(20),timeout: TimeSpan.FromSeconds(20));
                 MapIcon icon = new MapIcon();
-                icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Images/me.png"));
-                icon.Title = "This is Me";
-                icon.Location = new Geopoint(new BasicGeoposition() {Latitude = geoposition.Coordinate.Point.Position.Latitude, Longitude = geoposition.Coordinate.Point.Position.Longitude});
+                icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Images/GMITMap1.jpg"));
+                icon.ZIndex = 1;
+                icon.Location = new Geopoint(new BasicGeoposition() { Latitude = 53.278481, Longitude = -9.010477 });
                 icon.NormalizedAnchorPoint = new Point(0.5, 0.5);
                 MyMap.MapElements.Add(icon);
                 await MyMap.TrySetViewAsync(icon.Location, 18D, 0, 0, MapAnimationKind.Bow);
                 myProgressBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 mySlider.Value = MyMap.ZoomLevel;
+                MyMap.ZoomLevel = 17;
             }
             catch(UnauthorizedAccessException)
             {
@@ -156,6 +179,7 @@ namespace GeoAttempFri
                MyMap.MapElements.Add(icon);
                await MyMap.TrySetViewAsync(geoposition.Coordinate.Point, 18D);
                mySlider.Value = MyMap.ZoomLevel;
+               MyMap.ZoomLevel = 17;
                myProgressBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
            }
            catch (UnauthorizedAccessException)
@@ -166,7 +190,26 @@ namespace GeoAttempFri
 
        private void ShowGeofence_Click(object sender, RoutedEventArgs e)
        {
+           DrawGeofences();
+       }
 
+       private void DrawGeofences()
+       {
+           //Draw semi transparent purple circles for every fence
+           var color = Colors.Red;
+           color.A = 80;
+
+           // Note GetFenceGeometries is a custom extension method
+           foreach (var pointlist in GeofenceMonitor.Current.GetFenceGeometries())
+           {
+               var shape = new MapPolygon
+               {
+                   FillColor = color,
+                   StrokeColor = color,
+                   Path = new Geopath(pointlist.Select(p => p.Position)),
+               };
+               MyMap.MapElements.Add(shape);
+           }
        }
     }
 }
