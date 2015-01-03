@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
+
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
 namespace GeoAttempFri
@@ -35,6 +36,8 @@ namespace GeoAttempFri
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+
+
         }
 
         /// <summary>
@@ -111,6 +114,8 @@ namespace GeoAttempFri
             var rootFrame = sender as Frame;
             rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() };
             rootFrame.Navigated -= this.RootFrame_FirstNavigated;
+
+
         }
 
         /// <summary>
