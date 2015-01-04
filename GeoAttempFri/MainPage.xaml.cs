@@ -40,6 +40,9 @@ namespace GeoAttempFri
         //Create Geofence Monitor and create Geolocator
         GeofenceMonitor _monitor = GeofenceMonitor.Current;
         Geolocator geo = null;
+        private const string taskName = "BlogFeedBackgroundTask";
+        private const string taskEntryPoint = "BackgroundTasks.BlogFeedBackgroundTask";
+
         public MainPage()
         {
           
@@ -141,9 +144,6 @@ namespace GeoAttempFri
                 var registration = taskBuilder.Register();
             }
         }
-
-        private const string taskName = "BlogFeedBackgroundTask";
-        private const string taskEntryPoint = "BackgroundTasks.BlogFeedBackgroundTask";
 
        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {

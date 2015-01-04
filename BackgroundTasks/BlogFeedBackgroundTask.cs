@@ -74,7 +74,7 @@ namespace BackgroundTasks
                 updater.Update(new TileNotification(tileXml));
 
                 // Don't create more than 5 notifications.
-                if (itemCount++ > 5) break;
+                if (itemCount++ > 10) break;
             }
         }
 
@@ -84,7 +84,7 @@ namespace BackgroundTasks
         static string customHeaderValue = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)";
 
         static string textElementName = "text";
-        static string feedUrl = @"http://http://gmitlibrary.blogspot.ie/b/MainFeed.aspx?Type=BlogsOnly";
+        static string feedUrl = @"http://gmitlibrary.blogspot.ie/b/MainFeed.aspx?Type=BlogsOnly";
     }
 }
 
