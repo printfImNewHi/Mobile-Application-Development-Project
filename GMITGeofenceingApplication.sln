@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MappingUtilities", "Mapping
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundTasks", "BackgroundTasks\BackgroundTasks.csproj", "{9ED13D96-A250-4F66-BC73-BF13FF4A3D44}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadMeWordDoc", "ReadMeWordDoc", "{921D5175-8B1B-4875-94A1-274E91BC6248}"
+	ProjectSection(SolutionItems) = preProject
+		..\Mobile Application Development Final Project.docx = ..\Mobile Application Development Final Project.docx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
